@@ -1,0 +1,929 @@
+﻿
+@model Fruti.DTO.FundoType
+@using Fruti.DTO.Mapa
+@{
+    ViewBag.Title = "Mapas";
+}
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Empresa</span> - Ordenes</h4>
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a href="@Url.Action("Index", "Home")" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                <span class="breadcrumb-item active"><i class="icon-search4 mr-2"></i> Ordenes</span>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="card">
+        <div class="card-header header-elements-inline">
+            <h4 class="card-title">Mapa</h4>
+        </div>
+        <div card="card-body" class="pl-3 pr-3 pb-3">
+            <div><h4>Filtros Avanzados</h4></div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Productos:</label>
+                        <select id="ProductSelect" class="form-control form-control-select2">
+                            <option value="0">Todos los Productos</option>
+                            @foreach (ProductActivoType item in ViewData["ListaProductos"] as IList<ProductActivoType>)
+                            {
+                                <option value="@item.ID_Producto">@item.Nom_Producto</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Activos:</label>
+                        <select id="ActivoSelect" class="form-control form-control-select2">
+                            <option value="0">Todos los Activos</option>
+                            @{
+                                var list_activos = new List<Int64>();
+                                foreach (ProductActivoType item in ViewData["ListaProductos"] as IList<ProductActivoType>)
+                                {
+                                    if (!list_activos.Contains(item.ID_Ingrediente_Activo))
+                                    {
+                                        list_activos.Add(item.ID_Ingrediente_Activo);
+
+                                        <option value="@item.ID_Ingrediente_Activo">@item.Nom_Ingrediente_Activo</option>
+                                    }
+
+                                }
+                                foreach (ProductActivoType item in ViewData["ListaProductos"] as IList<ProductActivoType>)
+                                {
+                                    if (!list_activos.Contains(item.ID_Ingrediente_Activo_2))
+                                    {
+
+                                        <option value="@item.ID_Ingrediente_Activo_2">@item.Nom_Ingrediente_Activo_2</option>
+
+                                    }
+                                }
+
+                            }
+
+
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Temporadas:</label>
+                        <select id="Temporada" class="form-control form-control-select2"></select>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Rango de Fechas: </label>
+                        <br />
+                        <input id="Fecha" value="0" class="form-control" />
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Especie: </label>
+                        <select id="NomEspecie" class="form-control form-control-select2">
+                            <option value="0">Todos las Especies</option>
+                            @{
+                                var list_especies = new List<String>();
+
+                                foreach (InfoEspeciesType item in ViewData["ListaEspecies"] as IList<InfoEspeciesType>)
+                                {
+                                    if (!list_especies.Contains(item.Nom_Especie))
+                                    {
+                                        list_especies.Add(item.Nom_Especie);
+                                        <option value="@item.ID_Especie">@item.Nom_Especie</option>
+
+                                    }
+                                }
+
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Variedades: </label>
+                        <select id="Variedad" class="form-control form-control-select2">
+                            <option value="0">Todos las Variedades</option>
+                            @{
+                                var list_variedad = new List<String>();
+
+                                foreach (InfoEspeciesType item in ViewData["ListaEspecies"] as IList<InfoEspeciesType>)
+                                {
+                                    if (!list_variedad.Contains(item.Nom_Variedad))
+                                    {
+                                        list_variedad.Add(item.Nom_Variedad);
+                                        <option value="@item.ID_Variedad">@item.Nom_Variedad</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Estados Fenologicos: </label>
+                        <select id="EstadoFenologico" class="form-control form-control-select2">
+                            <option value="0">Todos los Estados</option>
+                            @{
+                                var list_Estados = new List<String>();
+                                foreach (InfoEspeciesType item in ViewData["ListaEspecies"] as IList<InfoEspeciesType>)
+                                {
+                                    if (!list_Estados.Contains(item.Nom_Estado_Fenologico))
+                                    {
+                                        list_Estados.Add(item.Nom_Estado_Fenologico);
+                                        <option value="@item.ID_Estado_Fenologico">@item.Nom_Estado_Fenologico</option>
+                                    }
+
+                                }
+
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <br />
+                        <button type="button" class="btn bg-blue-400 btn-labeled btn-labeled-left ml-2 btn-search" id="btnfiltro"><b><i class="icon-search4"></i></b>Filtrar Mapa</button>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-4">
+                    <table class="table datatable-basic" id="tabla">
+                        <thead>
+                            <tr class="bg-danger-400">
+                                <th style="text-align:center;">Nombre cuartel</th>
+                                <th style="text-align:center;">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-8">
+                    <div id="map-view" style="height: 700px;"></div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+@section Styles {
+    <style type="text/css">
+        .spanA {
+            background-color: #008000;
+            text-align: center;
+            color: white;
+        }
+
+        .spanN {
+            background-color: #A838E7;
+            text-align: center;
+            color: white;
+        }
+
+        .spanS {
+            background-color: #FF0000;
+            text-align: center;
+            color: white;
+        }
+
+        .datatable-header {
+            margin-top: 0;
+            padding-top: 0;
+        }
+    </style>
+
+}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMa39QA1UyCOiAV8gvzjYFR4V0LTCqHD8&libraries=geometry,drawing&callback=UnirMaps" async defer></script>
+<script src=@Url.Content("~/Content/js/plugins/notifications/pnotify.min.js")></script>
+<script src=@Url.Content("~/Content/js/plugins/tables/datatables/datatables.min.js")></script>
+<script type="text/javascript">
+
+
+
+
+    const listProducts = @Html.Raw(Json.Encode(ViewData["ListaProductos"]));
+    
+
+    function selectProducts(id_product) {
+
+
+        var aux = []
+
+        for (product of listProducts){
+            if (product.ID_Producto == id_product) {
+                var object = {
+                    "Cod_Producto": id_product,
+                    "Nom_Producto": product.Nom_Producto,
+                    "Activos": []
+                }
+            }
+         }
+
+        listProducts.forEach(item => {
+            if (id_product == item.ID_Producto) {
+
+                if (item.ID_Ingrediente_Activo != 0) {
+                    if (!aux.includes(item.ID_Ingrediente_Activo)) {
+                        var Activo = {
+                            "Nombre": item.Nom_Ingrediente_Activo,
+                            "ID_Activo": item.ID_Ingrediente_Activo
+                        }
+                        object.Activos.push(Activo)
+                        aux.push(item.ID_Ingrediente_Activo)
+                    }
+
+                }
+                if (item.ID_Ingrediente_Activo_2 != 0) {
+                    if (!aux.includes(item.ID_Ingrediente_Activo_2)) {
+                        var Activo = {
+                            "Nombre": item.Nom_Ingrediente_Activo_2,
+                            "ID_Activo": item.ID_Ingrediente_Activo_2
+                        }
+                        object.Activos.push(Activo)
+                        aux.push(item.ID_Ingrediente_Activo_2)
+                    }
+
+                }
+
+            }
+
+        })
+
+        return object
+    }
+
+    function selectActivos(id_activo) {
+
+
+        for (product of listProducts) {
+            if (product.ID_Ingrediente_Activo == id_activo) {
+                var object = {
+                    "Cod_Activo": id_activo,
+                    "Nom_Activo": product.Nom_Ingrediente_Activo,
+                    "Productos": []
+                }
+
+            }
+            else if (product.ID_Ingrediente_Activo_2 == id_activo && product.ID_Ingrediente_Activo_2 != product.ID_Ingrediente_Activo) {
+                var object = {
+                    "Cod_Activo": id_activo,
+                    "Nom_Activo": product.Nom_Ingrediente_Activo_2,
+                    "Productos": []
+                }
+            }
+        }
+        listProducts.forEach(item => {
+            if (id_activo == item.ID_Ingrediente_Activo || id_activo == item.ID_Ingrediente_Activo_2) {
+                object.Productos.push({ "Producto": item.Nom_Producto, "ID": item.ID_Producto })
+            }
+        })
+
+        return object
+
+
+    }
+
+
+
+    function listarActivos() {
+        var list_activos = [];
+        var aux = [];
+        listProducts.forEach(item => {
+            if (!aux.includes(item.ID_Ingrediente_Activo)) {
+                aux.push(item.ID_Ingrediente_Activo)
+
+                list_activos.push({
+                    "Nom_Ingrediente_Activo": item.Nom_Ingrediente_Activo, "ID_Ingrediente_Activo": item.ID_Ingrediente_Activo
+                })
+            }
+            
+        })
+        
+        listProducts.forEach(item => {
+            if (!aux.includes(item.ID_Ingrediente_Activo_2)) {
+                aux.push(item.ID_Ingrediente_Activo_2)
+                list_activos.push({
+                    "Nom_Ingrediente_Activo": item.Nom_Ingrediente_Activo_2, "ID_Ingrediente_Activo": item.ID_Ingrediente_Activo_2
+                })
+            }
+
+        })
+        return list_activos
+
+
+    }
+
+
+    $("#ProductSelect").on("change", function () {
+        var id_product = $("#ProductSelect").val();
+        var x = 0;
+        var valueActivo = $("#ActivoSelect").val();
+
+        if (id_product != 0 && (valueActivo == 0 || valueActivo != 0) && $("#ProductSelect option:first").text() != "Recargar los Productos") {
+            var products = selectProducts(id_product)
+            $("#ActivoSelect").empty();
+            $("#ActivoSelect").append("<option value=0>Recargar los Activos</option>")
+
+            products.Activos.forEach(item => {
+                $("#ActivoSelect").append(`<option value=${item.ID_Activo}>${item.Nombre}</option>`)
+            })
+            $("#ActivoSelect option:eq(1)").prop('selected', true)
+        }
+        else if (id_product != 0 && valueActivo != 0 )  {
+            x = 0;
+        }
+
+        else if ($("#ProductSelect option:selected").text() == "Recargar los Productos") {
+            $("#ProductSelect").empty();
+            $("#ProductSelect").append("<option value=0>Todos los Productos</option>")
+            listProducts.forEach(item => {
+
+                $("#ProductSelect").append(`<option value=${item.ID_Producto}>${item.Nom_Producto}</option>`)
+
+            })
+        }
+    })
+    
+    $("#ActivoSelect").on("change", function () {
+        var x = 0;
+        var id_activo = $("#ActivoSelect").val()
+        
+        var valueProduct = $("#ProductSelect").val()
+
+        if (id_activo != 0 && valueProduct != 0 && $("#ActivoSelect option:first").text() != "Todos los Activos") {
+            x = 0
+
+        }
+        else if (id_activo != 0 && (valueProduct == 0 || valueProduct != 0)) {
+
+            $("#ProductSelect").empty();
+            $("#ProductSelect").append("<option value=0>Recargar los Productos</option>")
+
+            var activos = selectActivos(id_activo)
+
+            activos.Productos.forEach(item => {
+                $("#ProductSelect").append(`<option value=${item.ID}>${item.Producto}</option>`)
+            })
+            $("#ProductSelect option:eq(1)").prop('selected', true)
+        }
+        else if ($("#ActivoSelect option:selected").text() == "Recargar los Activos") {
+            var listActivos = listarActivos()
+            $("#ActivoSelect").empty();
+            $("#ActivoSelect").append("<option value=0>Todos los Activos</option>")
+            listActivos.forEach(item => {
+
+                $("#ActivoSelect").append(`<option value=${item.ID_Ingrediente_Activo}>${item.Nom_Ingrediente_Activo}</option>`)
+
+            })
+            
+        }
+    })
+    
+
+    var quartersTable = null;
+    const finalArray = [];
+    var Response = [];
+    var cuartersFilter = []
+    var map = null;
+    var marker = null;
+    var infowindow = null;
+    var farm = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model).Replace("'", "\\'"))');
+    $.extend($.fn.dataTable.defaults, {
+        autoWidth: false,
+        lengthMenu: false,
+        dom: '<"datatable-header"><"datatable-scroll-wrap"t><"datatable-footer"ip>',
+        /* Results in:
+            l -> {length}
+            p -> {processing}
+            t -> {table}
+            i -> {information}
+            p -> {pagination}
+        */
+        // Mas opciones para languaje en https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json
+        language: {
+            search: '<span>Buscar:</span> _INPUT_',
+            searchPlaceholder: 'Escriba para buscar...',
+            lengthMenu: '',
+            zeroRecords: "Sin resultados",
+            info: "Página _PAGE_ de _PAGES_",
+            infoEmpty: "Sin registros disponibles",
+            infoFiltered: "(Filtrado de _MAX_ registros totales)",
+            emptyTable: "Ningún dato disponible en esta tabla",
+            loadingRecords: "Cargando...",
+            paginate: {
+                'first': 'First',
+                'last': 'Last',
+                'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;',
+                'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;'
+            },
+            select: {
+                "rows": {
+                    "1": "1 fila seleccionada",
+                    "_": "%d filas seleccionadas"
+                }
+            }
+        }
+    });
+    $.get("@Url.Action("GetTemporadas")/?IdFundo=" + farm.IdFundo, function (data) {
+
+        structureData(data)
+        $("#Temporada").append("<option value=0>Todas las Temporadas </option>")
+        finalArray.forEach(element => $("#Temporada").append(`<option value=${element.ID_Temporada}> ${element.Nom_Temporada} </option>`))
+        
+        if (finalArray.length != 0) {
+            $("#Fecha").daterangepicker({
+                autoApply: true,
+                applyClass: 'bg-slate-600',
+                cancelClass: 'btn-light',
+                showMonthsShort: true,
+                startDate: finalArray[0].Fecha_Desde,
+                endDate: finalArray[finalArray.length - 1].Fecha_Hasta,
+                minDate: finalArray[0].Fecha_Desde,
+                maxDate: finalArray[finalArray.length - 1].Fecha_Hasta,
+
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    monthNames: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    cancelLabel: 'Cancelar',
+                    applyLabel: 'Aceptar',
+                    startLabel: 'Desde',
+                    endLabel: 'Hasta',
+                }
+
+            })
+        }
+        else {
+            $("#Fecha").daterangepicker({
+                autoApply: true,
+                applyClass: 'bg-slate-600',
+                cancelClass: 'btn-light',
+                showMonthsShort: true,
+                startDate: "01/01/2019",
+                endDate: moment().format('DD/MM/YYYY'),
+                minDate: "01/01/2019",
+                maxDate: moment().format('DD/MM/YYYY'),
+
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    monthNames: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    cancelLabel: 'Cancelar',
+                    applyLabel: 'Aceptar',
+                    startLabel: 'Desde',
+                    endLabel: 'Hasta',
+                }
+
+            })
+            new PNotify({
+                title: 'Frutita',
+                delay: 3000,
+                text: "No se encontraron Ordenes de Aplicación ",
+                addclass: 'bg-danger border-danger'
+            });
+
+        }
+
+
+    })
+
+    $("#btnfiltro").prop('disabled', true);
+
+    $("#tabla").dataTable();
+
+
+    function UnirMaps() {
+        DrawMap2();
+        showMap();
+    }
+
+
+    function DrawMap2() {
+        infowindow = new google.maps.InfoWindow();
+        map = new google.maps.Map(document.getElementById('map-view'), {
+            zoom: 15,
+            center: {
+                lat: farm.Latitud,
+                lng: farm.Longitud
+            },
+            mapTypeId: google.maps.MapTypeId.SATELLITE,
+            disableDefaultUI: true,
+            zoomControl: true
+        });
+        marker = new google.maps.Marker({
+            position: {
+                lat: farm.Latitud,
+                lng: farm.Longitud
+            },
+            map: map
+        });
+        google.maps.event.addListener(marker, 'click', function () {
+            infowindow.setContent(this.content);
+            infowindow.open(map, this);
+        });
+
+
+    }
+
+    var iniciar = "Init"
+    var showMap = function () {
+        marker.content = farm.NombreFundo;
+        marker.setPosition({
+            lat: farm.Latitud,
+            lng: farm.Longitud
+        });
+        map.setCenter({
+            lat: farm.Latitud,
+            lng: farm.Longitud
+        });
+
+        $.get("@Url.Action("GetQuartersPolygons","Cuartel")?farmId=" + farm.IdFundo, function (data) {
+            var quarterPolygons = data.quarterPolygons;
+            var data =[]
+            var auxPoli = []
+            console.log(quarterPolygons)
+            
+            quarterPolygons.forEach(item => {
+                var quarterPolygon = [];
+
+                item.polygons.forEach(polygon => {
+                    quarterPolygon.push({
+                        lat: polygon.Latitud,
+                        lng: polygon.Longitud
+                    });
+
+                });
+
+
+
+
+                if (iniciar == "Init") {
+
+                    if (quarterPolygon.length > 0) {
+                        var object = {
+                            "ID": item.quarter.IdCuartel,
+                            "Nombre": item.quarter.NombreCuartel,
+                            "Estado": "Sin filtro"
+                        }
+                        data.push(object)
+                    }
+                    
+                    var poligonoCampo = new google.maps.Polygon({
+                        paths: quarterPolygon,
+                        strokeColor: '#A838E7',
+                        fillColor: '#A838E7',
+                        strokeOpacity: 1,
+                        strokeWeight: 2,
+                        clickable: true,
+                        draggable: false,
+                        editable: false,
+                        content: item.quarter.NombreCuartel
+                    });
+                }
+
+                else {
+
+                    if (cuartersFilter.includes(item.quarter.IdCuartel)) {
+                        if (quarterPolygon.length > 0) {
+                            var object = {
+                                "ID": item.quarter.IdCuartel,
+                                "Nombre": item.quarter.NombreCuartel,
+                                "Estado": "Aplicado"
+                            }
+                            data.push(object)
+                        }
+
+                        var poligonoCampo = new google.maps.Polygon({
+                            paths: quarterPolygon,
+                            strokeColor: '#008000',
+                            fillColor: '#008000',
+                            strokeOpacity: 1,
+                            strokeWeight: 2,
+                            clickable: true,
+                            draggable: false,
+                            editable: false,
+                            content: item.quarter.NombreCuartel
+                        });
+                    }
+                    else {
+                        if (quarterPolygon.length > 0) {
+                            var object = {
+                                "ID": item.quarter.IdCuartel,
+                                "Nombre": item.quarter.NombreCuartel,
+                                "Estado": "No aplicado"
+                            }
+                            data.push(object)
+                        }
+                        
+                        var poligonoCampo = new google.maps.Polygon({
+                            paths: quarterPolygon,
+                            strokeColor: '#FF0000',
+                            fillColor: '#FF0000',
+                            strokeOpacity: 1,
+                            strokeWeight: 2,
+                            clickable: true,
+                            draggable: false,
+                            editable: false,
+                            content: item.quarter.NombreCuartel
+                        });
+                    }
+                }
+                
+                poligonoCampo.setMap(map);
+                google.maps.event.addListener(poligonoCampo, 'click', function (event) {
+                    infowindow.setContent(this.content);
+                    infowindow.setPosition(event.latLng);
+                    infowindow.open(map, this);
+                });
+
+
+
+                $("#btnfiltro").prop('disabled', false);
+                auxPoli.push(quarterPolygon)
+                
+            });
+            var count = 0;
+            auxPoli.forEach(item => {
+                if (item.length == 0) {
+                    count++
+                }
+            })
+
+            if (auxPoli.length == count) {
+                new PNotify({
+                    title: 'Frutita',
+                    delay: 3000,
+                    text: "No se encontraron Polígonos",
+                    addclass: 'bg-danger border-danger'
+                });
+            }
+
+            var tabla = $("#tabla").DataTable({
+                responsive: true,
+                ordering: true,
+                bDestroy: true,
+                pageLength: 10,
+                data: data,
+                columns: [
+                    {
+                        data: "Nombre",
+                        render: function (data, type, row, meta) {
+                            return `${row.Nombre}`;
+                        }
+                    },
+
+                    {
+                        data: "Estado",
+                        className: "text-center",
+                        render: function (data, type, row, meta) {
+                            if (row.Estado == "Aplicado") {
+                                return `<span class="badge bg-success-400">${row.Estado}</span>`;
+                            }
+                            else if (row.Estado == "No aplicado") {
+                                return `<span class="badge bg-danger-400">${row.Estado}</span>`;
+                            }
+                            else {
+                                return `<span class="badge spanN">${row.Estado}</span>`;
+                            }
+                        }
+                    },
+
+                ]
+            });
+            tabla.rows({ selected: true }).remove();
+            tabla.rows.add(data).draw(false);
+            iniciar = "False";
+        });
+    }
+
+    $("#ActivoSelect").select2();
+    $("#ProductSelect").select2();
+    $("#ActivoSelect2").select2();
+    $("#NomEspecie").select2();
+    $("#Variedad").select2();
+    $("#EstadoFenologico").select2();
+    $("#Temporada").select2();
+
+
+
+    $("#btnfiltro").on("click", function () {
+        $("#btnfiltro").prop('disabled', true);
+
+        const Activo = $("#ActivoSelect").val()
+        const Product = $("#ProductSelect").val();
+
+        const Especie = $("#NomEspecie").val();
+        const Variedad = $("#Variedad").val();
+        const EstadoFenologico = $("#EstadoFenologico").val();
+        var Fecha_Desde;
+        var Fecha_Hasta;
+        const Fecha = $("#Fecha").val();
+
+        Fecha_Desde = Fecha.split("-")[0].replace(" ", "")
+        Fecha_Hasta = Fecha.split("-")[1].replace(" ","")
+        nueva_Desde = `${Fecha_Desde.split("/")[2]}-${Fecha_Desde.split("/")[1]}-${Fecha_Desde.split("/")[0]}`
+        nueva_Hasta = `${Fecha_Hasta.split("/")[2]}-${Fecha_Hasta.split("/")[1]}-${Fecha_Hasta.split("/")[0]}`
+
+
+        var datos = {
+            "ID_Especie": Especie,
+            "ID_Producto": Product,
+            "ID_Variedad": Variedad,
+            "ID_Ingrediente_Activo": Activo,
+            "ID_Estado_Fenologico": EstadoFenologico,
+            "Fecha_Desde": nueva_Desde,
+            "Fecha_Hasta": nueva_Hasta,
+
+        }
+
+
+        $.post("@Url.Action("filtroMap")", datos, function (response) {
+
+            Response = [...response]
+            new PNotify({
+                title: 'Frutita',
+                delay: 3500,
+                text: "Cargando Mapa con Cuarteles ",
+                addclass: 'bg-info border-info'
+            });
+            cuartersFilter = []
+
+            Response.forEach(item => {
+
+                cuartersFilter.push(item.ID_Cuartel)
+            })
+            UnirMaps();
+
+
+        });
+
+
+    });
+
+    $("#Temporada").on("change", function () {
+        let ID_Temporada = $("#Temporada").val();
+
+        if (ID_Temporada != 0) {
+
+            let objeto = (finalArray.filter(element => element.ID_Temporada == ID_Temporada))[0]
+
+            $("#Fecha").daterangepicker({
+                autoApply: true,
+                applyClass: 'bg-slate-600',
+                cancelClass: 'btn-light',
+                showMonthsShort: true,
+                startDate: objeto.Fecha_Desde,
+                endDate: objeto.Fecha_Hasta,
+                minDate: objeto.Fecha_Desde,
+                maxDate: objeto.Fecha_Hasta,
+
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    monthNames: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    cancelLabel: 'Cancelar',
+                    applyLabel: 'Aceptar',
+                    startLabel: 'Desde',
+                    endLabel: 'Hasta',
+                }
+
+            })
+        }
+        else {
+            $("#Fecha").daterangepicker({
+                autoApply: true,
+                applyClass: 'bg-slate-600',
+                cancelClass: 'btn-light',
+                showMonthsShort: true,
+                startDate: finalArray[0].Fecha_Desde,
+                endDate: finalArray[finalArray.length - 1].Fecha_Hasta,
+                minDate: finalArray[0].Fecha_Desde,
+                maxDate: finalArray[finalArray.length - 1].Fecha_Hasta,
+
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    monthNames: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    cancelLabel: 'Cancelar',
+                    applyLabel: 'Aceptar',
+                    startLabel: 'Desde',
+                    endLabel: 'Hasta',
+                }
+
+            })
+
+
+
+        }
+
+    })
+
+
+    function parseDateNet(str) {
+        var regexp = /\/Date\((\d*)\)\//;
+        return new Date(+str.replace(regexp, '$1'));
+    }
+
+    function convertDate(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat)
+        return [pad(d.getDate()), pad(d.getMonth() + 1), d.getFullYear()].join('/')
+    }
+
+    function filterData(element, datos) {
+        const filterArray = datos.filter(x => x.ID_Temporada === element.ID_Temporada)
+
+
+        if (filterArray.length > 1) {
+
+            let first = filterArray[0];
+            let last = filterArray[filterArray.length - 1]
+
+            let Date_inf = parseDateNet(first.Fecha_Desde)
+            let Date_last = parseDateNet(last.Fecha_Hasta)
+
+            const objeto = {
+                "ID_Temporada": first.ID_Temporada,
+                "Fecha_Desde": convertDate(Date_inf),
+                "Fecha_Hasta": convertDate(Date_last),
+                "Nom_Temporada": first.Nom_Temporada
+            }
+            finalArray.push(objeto)
+        }
+        else {
+            let element = filterArray[0]
+            let Date_inf = parseDateNet(element.Fecha_Desde)
+            let Date_last = parseDateNet(element.Fecha_Hasta)
+
+            const objeto = {
+                "ID_Temporada": element.ID_Temporada,
+                "Fecha_Desde": convertDate(Date_inf),
+                "Fecha_Hasta": convertDate(Date_last),
+                "Nom_Temporada": element.Nom_Temporada
+            }
+            finalArray.push(objeto)
+
+        }
+    }
+
+
+    function structureData(datos) {
+        const aux_temporadas = []
+        const aux_datos = []
+        datos.forEach(function (item) {
+
+            if (!aux_temporadas.includes(item.ID_Temporada)) {
+
+                aux_temporadas.push(item.ID_Temporada)
+                aux_datos.push(item)
+            }
+        })
+
+        aux_datos.forEach (element => filterData(element,datos))
+
+    }
+
+</script>
+
+@section Javascript{
+
+    <script src=@Url.Content("~/Content/js/plugins/forms/selects/select2.min.js")></script>
+    <script src=@Url.Content("~/Content/js/plugins/notifications/pnotify.min.js")></script>
+
+
+}
